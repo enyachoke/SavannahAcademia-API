@@ -46,6 +46,6 @@ class TermsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def term_params
-      params.require(:term).permit(:start_date, :end_date)
+      params.require(:term).permit(:start_date, :end_date,:name,:year_id)
     end
 end

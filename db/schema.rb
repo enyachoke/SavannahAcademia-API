@@ -11,15 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160613185518) do
+ActiveRecord::Schema.define(version: 20160619112952) do
 
   create_table "class_room_subjects", force: :cascade do |t|
     t.integer  "subject_id"
     t.integer  "class_room_id"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.integer  "teacher_id"
     t.index ["class_room_id"], name: "index_class_room_subjects_on_class_room_id"
     t.index ["subject_id"], name: "index_class_room_subjects_on_subject_id"
+    t.index ["teacher_id"], name: "index_class_room_subjects_on_teacher_id"
   end
 
   create_table "class_rooms", force: :cascade do |t|
@@ -27,6 +29,18 @@ ActiveRecord::Schema.define(version: 20160613185518) do
     t.integer  "number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "class_timings", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "week_day"
+    t.integer  "student_group_id"
+    t.time     "start_time"
+    t.time     "end_time"
+    t.boolean  "is_break",         default: true
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.index ["student_group_id"], name: "index_class_timings_on_student_group_id"
   end
 
   create_table "marks", force: :cascade do |t|
@@ -65,6 +79,8 @@ ActiveRecord::Schema.define(version: 20160613185518) do
     t.integer  "group_teacher_id"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
+    t.integer  "class_room_id"
+    t.index ["class_room_id"], name: "index_student_groups_on_class_room_id"
     t.index ["group_teacher_id"], name: "index_student_groups_on_group_teacher_id"
     t.index ["year_id"], name: "index_student_groups_on_year_id"
   end
@@ -74,18 +90,21 @@ ActiveRecord::Schema.define(version: 20160613185518) do
     t.string   "middle_name"
     t.string   "last_name"
     t.integer  "student_group_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.integer  "admission_group_id"
+    t.index ["admission_group_id"], name: "index_students_on_admission_group_id"
     t.index ["student_group_id"], name: "index_students_on_student_group_id"
   end
 
   create_table "subjects", force: :cascade do |t|
     t.string   "name"
-    t.integer  "year_id"
+    t.integer  "year"
     t.integer  "hours_per_week"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.index ["year_id"], name: "index_subjects_on_year_id"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.boolean  "has_exam",       default: true
+    t.index ["year"], name: "index_subjects_on_year"
   end
 
   create_table "teacher_subjects", force: :cascade do |t|
@@ -110,6 +129,9 @@ ActiveRecord::Schema.define(version: 20160613185518) do
     t.date     "end_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "year_id"
+    t.string   "name"
+    t.index ["year_id"], name: "index_terms_on_year_id"
   end
 
   create_table "time_table_items", force: :cascade do |t|
@@ -118,6 +140,14 @@ ActiveRecord::Schema.define(version: 20160613185518) do
     t.integer  "item_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string   "username"
+    t.string   "email"
+    t.string   "password_digest"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
   create_table "years", force: :cascade do |t|

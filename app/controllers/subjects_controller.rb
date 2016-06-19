@@ -3,8 +3,9 @@ class SubjectsController < ApplicationController
 
   # GET /subjects
   def index
-    @subjects = Subject.all
-
+    ids = params[:exclude] || ''
+    exclude_ids = ids.split(',').map(&:to_i)
+    @subjects = Subject.where.not(id: exclude_ids)
     render json: @subjects
   end
 
@@ -39,13 +40,14 @@ class SubjectsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_subject
-      @subject = Subject.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def subject_params
-      params.require(:subject).permit(:name, :year_id, :hours_per_week)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_subject
+    @subject = Subject.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def subject_params
+    params.require(:subject).permit(:name, :year, :hours_per_week, :has_exam)
+  end
 end

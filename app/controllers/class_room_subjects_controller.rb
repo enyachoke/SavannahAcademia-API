@@ -46,6 +46,6 @@ class ClassRoomSubjectsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def class_room_subject_params
-      params.require(:class_room_subject).permit(:subject_id, :class_room_id)
+      params.require(:class_room_subject).permit(:subject_id, :class_room_id,:teacher_id)
     end
 end

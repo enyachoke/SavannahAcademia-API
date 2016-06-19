@@ -1,7 +1,6 @@
 class Subject < ApplicationRecord
-  has_many :class_room_subjects
+  has_many :class_room_subjects,inverse_of: :subject
   SCHOOL_YEARS = (1..11).to_a
-  belongs_to :year
   has_many :teacher_subjects
   has_many :teachers, :through => :teacher_subjects
 

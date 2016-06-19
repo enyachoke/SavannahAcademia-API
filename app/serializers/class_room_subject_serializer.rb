@@ -1,5 +1,3 @@
 class ClassRoomSubjectSerializer < ActiveModel::Serializer
-  attributes :id
-  has_one :subject
-  has_one :class_room
+  attributes :id,:subject,:class_room,:teacher
 end
