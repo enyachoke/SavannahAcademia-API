@@ -3,7 +3,9 @@ class ClassTimingsController < ApplicationController
 
   # GET /class_timings
   def index
-    @class_timings = ClassTiming.all
+    student_group_id = params[:student_group_id] || 1
+    week_day = params[:week_day] || 1
+    @class_timings = ClassTiming.where(:student_group_id=>student_group_id).where(:week_day=>week_day)
 
     render json: @class_timings
   end
@@ -39,13 +41,14 @@ class ClassTimingsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_class_timing
-      @class_timing = ClassTiming.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def class_timing_params
-      params.require(:class_timing).permit(:name, :week_day, :student_group_id, :start_time, :end_time, :is_break)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_class_timing
+    @class_timing = ClassTiming.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def class_timing_params
+    params.require(:class_timing).permit(:name, :week_day, :student_group_id, :start_time, :end_time, :is_break)
+  end
 end
