@@ -46,6 +46,6 @@ class YearsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def year_params
-      params.require(:year).permit(:name, :start_date, :end_date)
+      params.require(:year).permit(:id,:name, :start_date, :end_date)
     end
 end
