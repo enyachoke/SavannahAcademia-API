@@ -3,7 +3,7 @@ class GradingLevelsController < ApplicationController
 
   # GET /grading_levels
   def index
-    @grading_levels = GradingLevel.all
+    @grading_levels = GradingLevel.order('marks_from desc')
 
     render json: @grading_levels
   end

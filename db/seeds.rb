@@ -5,4 +5,17 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-User.create!(username: 'achachiez', password: '123123123', password_confirmation: '123123123')
+user = User.find_or_initialize_by(username: 'achachiez')
+user.password = '123123123'
+user.password_confirmation = '123123123'
+user.save!
+grades = ActiveSupport::JSON.decode(File.read('db/seeds/grades.json'))
+
+grades.each do |a|
+  grade = GradingLevel.find_or_initialize_by(name: a['name'])
+  grade.marks_from = a['marks_from']
+  grade.marks_to = a['marks_to']
+  grade.points = a['points']
+  grade.comments = a['comments']
+  grade.save!
+end
