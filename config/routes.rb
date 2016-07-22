@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'student_group_marks/existing', to: 'student_group_marks#existing'
+  get 'student_group_marks/student_marks', to: 'student_group_marks#student_marks'
   post 'student_group_marks/save_all', to: 'student_group_marks#save_all'
   post 'authenticate', to: 'authentication#authenticate'
   resources :student_group_marks

@@ -29,13 +29,15 @@ class StudentGroupMarksController < ApplicationController
                         .permit(marks: [:id, :student_id, :class_room_subject_id, :student_group_id,
                                         :exam_period_id, :marks, :points, :comments])
     marks = []
-    mark_params[:marks].map do |mark|
-      db_mark = StudentGroupMark.where(id: mark[:id]).take
-      marks << if db_mark
-                 db_mark.update(mark)
-               else
-                 StudentGroupMark.create(mark)
-               end
+    mark_params[:marks].map do |_mark|
+      if _mark[:id].blank?
+        cost = StudentGroupMark.create(_mark)
+        marks << cost
+      else
+        cost = StudentGroupMark.find(_mark[:id])
+        cost.update_attributes(_mark)
+        marks << cost
+      end
     end
     render json: marks
   end
@@ -54,6 +56,22 @@ class StudentGroupMarksController < ApplicationController
     else
       render json: @student_group_mark.errors, status: :unprocessable_entity
     end
+  end
+
+  def student_marks
+    marks = []
+    columns = []
+    StudentGroupMark.all.group_by { |item| item[:student_id] }.map do |_k, _v|
+      g = PivotTable::Grid.new do |g|
+        g.source_data = _v
+        g.column_name  = :exam_period_name
+        g.row_name     = :subject_name
+        g.value_name   = :marks
+      end
+      g.build
+      marks.push(column_totals: g.column_totals, row_totals: g.row_totals, grand_totals: g.grand_total, full_name: "#{_v[0].student.first_name}  #{_v[0].student.last_name}", rows: g.rows, columns: g.column_headers)
+    end
+    render json: marks
   end
 
   # DELETE /student_group_marks/1
